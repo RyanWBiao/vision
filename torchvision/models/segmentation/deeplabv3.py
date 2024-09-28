@@ -24,7 +24,7 @@ __all__ = [
     "deeplabv3_resnet50",
     "deeplabv3_resnet101",
 ]
-
+# name space: Only these names can be accessed by import
 
 class DeepLabV3(_SimpleSegmentationModel):
     """
@@ -44,11 +44,11 @@ class DeepLabV3(_SimpleSegmentationModel):
 
     pass
 
-
+# represents the head of the DeepLabV3 model, which is responsible for generating segmentation outputs from the features extracted by the backbone network
 class DeepLabHead(nn.Sequential):
     def __init__(self, in_channels: int, num_classes: int, atrous_rates: Sequence[int] = (12, 24, 36)) -> None:
         super().__init__(
-            ASPP(in_channels, atrous_rates),
+            ASPP(in_channels, atrous_rates), # The atrous_rates is a list/tuple of rates. There are more than one dilation rates.
             nn.Conv2d(256, 256, 3, padding=1, bias=False),
             nn.BatchNorm2d(256),
             nn.ReLU(),
@@ -76,7 +76,7 @@ class ASPPPooling(nn.Sequential):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        size = x.shape[-2:]
+        size = x.shape[-2:]  #This captures the height and width of the original input feature map.
         for mod in self:
             x = mod(x)
         return F.interpolate(x, size=size, mode="bilinear", align_corners=False)
@@ -87,7 +87,7 @@ class ASPP(nn.Module):
         super().__init__()
         modules = []
         modules.append(
-            nn.Sequential(nn.Conv2d(in_channels, out_channels, 1, bias=False), nn.BatchNorm2d(out_channels), nn.ReLU())
+            nn.Sequential(nn.Conv2d(in_channels, out_channels, 1, bias=False), nn.BatchNorm2d(out_channels), nn.ReLU())  # 1X1 convolution to change channel number according to arguments.
         )
 
         rates = tuple(atrous_rates)
@@ -96,7 +96,7 @@ class ASPP(nn.Module):
 
         modules.append(ASPPPooling(in_channels, out_channels))
 
-        self.convs = nn.ModuleList(modules)
+        self.convs = nn.ModuleList(modules)  # This a module specially designed for modules(layers)
 
         self.project = nn.Sequential(
             nn.Conv2d(len(self.convs) * out_channels, out_channels, 1, bias=False),
