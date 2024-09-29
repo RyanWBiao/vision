@@ -158,7 +158,7 @@ class DeepLabV3_ResNet50_Weights(WeightsEnum):
     )
     DEFAULT = COCO_WITH_VOC_LABELS_V1
 
-
+#This code snippet defines a class DeepLabV3_ResNet101_Weights which inherits from WeightsEnum. It is part of the PyTorch ecosystem, typically used within the torchvision library. This class acts as an enumeration for managing specific configurations of weights available for a DeepLabV3 model with a ResNet-101 backbone.
 class DeepLabV3_ResNet101_Weights(WeightsEnum):
     COCO_WITH_VOC_LABELS_V1 = Weights(
         url="https://download.pytorch.org/models/deeplabv3_resnet101_coco-586e9e4e.pth",
